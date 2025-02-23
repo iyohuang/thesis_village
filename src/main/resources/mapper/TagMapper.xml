@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thesis.village.dao.TagMapper">
+
+    <!-- 批量插入标签 -->
+    <insert id="batchInsertTags" parameterType="java.util.List">
+        INSERT INTO tag (name, usage_count, created_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name}, #{item.usageCount}, NOW())
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        name = VALUES(name) <!-- MySQL语法 -->
+    </insert>
+
+</mapper>
