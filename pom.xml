@@ -83,8 +83,23 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.4.6</version>
         </dependency>
-        
-        
+
+        <!-- AI4J -->
+        <dependency>
+            <groupId>io.github.lnyo-cly</groupId>
+            <artifactId>ai4j-spring-boot-stater</artifactId>
+            <version>0.7.0</version>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/lib/ai4j-spring-boot-starter-1.2.2.jar</systemPath>-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-reload4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -117,7 +132,7 @@
                 <configuration>
                     <mainClass>com.thesis.village.VillageTestApplication</mainClass>
                     <skip>true</skip>
-                    
+                    <includeSystemScope>true</includeSystemScope>
                 </configuration>
                 <executions>
                     <execution>

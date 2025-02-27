@@ -54,14 +54,12 @@ public class AnswerServiceImpl implements AnswerService {
             return result > 0;
         }
         int result = answerMapper.insert(answer);
-//            if(result > 0){
-//                .info("+1 ing~~~~~~~~~~~");
-//                UpdateWrapper<Question> updateWrapper = new UpdateWrapper();
-//                updateWrapper.lambda().eq(Question::getQid, answer.getQid());
-//                updateWrapper.lambda().setIncrBy(Question::getAnswerCount, 1);
-//                questionMapper.update(null, updateWrapper);
-//                
-//            }
+            if(result > 0){
+                UpdateWrapper<Question> updateWrapper = new UpdateWrapper();
+                updateWrapper.lambda().eq(Question::getQid, answer.getQid());
+                updateWrapper.lambda().setIncrBy(Question::getAnswerCount, 1);
+                questionMapper.update(null, updateWrapper);
+            }
         return result > 0;
         
     }
@@ -81,5 +79,18 @@ public class AnswerServiceImpl implements AnswerService {
             child.setChildren(getChildAnswer(child.getAnswerId()));
         }
         return childAnswer;
+    }
+
+    @Override
+    public AnswerVO toggleAcceptStatus(Long aid) {
+        QueryWrapper<Answer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Answer::getAnswerId, aid);
+        Answer answer = answerMapper.selectOne(queryWrapper);
+        if(answer == null){
+            return null;
+        }
+        answer.setIsAccepted(answer.getIsAccepted()== 0?1:0);
+        answerMapper.updateById(answer);
+        return new AnswerVO().setAccepted(answer.getIsAccepted() == 1);
     }
 }

@@ -88,4 +88,10 @@ public class AqController {
         List<AnswerVO> answer = answerService.getAnswersByQuestionId(qid);
         return ResponseResult.success(answer);
     }
+
+    @PatchMapping("/answers/{aid}/toggle-accept")
+    public ResponseResult<AnswerVO> toggleAcceptAnswer(@PathVariable Long aid) {
+        AnswerVO answer = answerService.toggleAcceptStatus(aid);
+        return ResponseResult.success(answer);
+    }
 }

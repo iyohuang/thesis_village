@@ -79,6 +79,7 @@ public class QuestionServiceImpl implements QuestionService {
             dto.setAuthorUid(u.getId());
             dto.setAuthorAvatar(u.getAvatar());
             dto.setAuthorName(u.getUsername());
+            dto.setAnswerCount(q.getAnswerCount());
             // 获取标签
             List<Long> tagIds = relMapper.selectTagIdsByQid(q.getQid());
             dto.setTags(tagIds);

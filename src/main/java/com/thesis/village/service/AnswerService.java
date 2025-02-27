@@ -12,4 +12,6 @@ public interface AnswerService {
     boolean addAnswer(Answer answer);
     
     List<AnswerVO> getAnswersByQuestionId(String qid);
+
+    AnswerVO toggleAcceptStatus(Long aid);
 }

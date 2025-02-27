@@ -42,3 +42,7 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
   params: count=countSql
+  
+ai:
+  moonshot:
+    api-key: sk-psGCcZ3ndv8WUPfNqMx69eFxSPiA6WcFVfz7gVChMofc0ZM4
