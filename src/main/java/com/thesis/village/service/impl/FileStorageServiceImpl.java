@@ -1,19 +1,12 @@
 package com.thesis.village.service.impl;
 
-import cn.hutool.core.io.resource.UrlResource;
-import com.thesis.village.service.CollectionService;
-import com.thesis.village.service.FileStorageService;
-import com.thesis.village.service.MomentService;
-import com.thesis.village.service.QuestionService;
+import com.thesis.village.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +33,10 @@ public class FileStorageServiceImpl implements FileStorageService {
     
     @Autowired
     private CollectionService collectionService;
+    
+    @Autowired
+    private EmailService emailService;
+    
     /**
      * 上传文件并返回访问路径
      */
@@ -107,5 +104,18 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
         collectionService.dosubmit(taskId, userId, colUrls);
         return colUrls;
+    }
+    
+    
+    @Override
+    public List<String> storeEmailFile(List<MultipartFile> files) throws IOException {
+        List<String> imageUrls = new ArrayList<>();
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                String imageUrl = emailService.uploadFile(file);
+                imageUrls.add(imageUrl);
+            }
+        }
+        return imageUrls;
     }
 }

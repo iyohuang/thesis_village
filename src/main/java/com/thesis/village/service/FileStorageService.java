@@ -20,4 +20,5 @@ public interface FileStorageService {
     
     List<String> storeColSrc(List<MultipartFile> files, Long taskId, Long userId) throws IOException;
 
+    List<String> storeEmailFile(List<MultipartFile> files) throws IOException;
 }

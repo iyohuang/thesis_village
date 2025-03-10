@@ -22,7 +22,9 @@ public class WebResourcesConfig implements WebMvcConfigurer {
     private String uploadDirQuestion;
     
     @Value("${file.upload-dir-collection}")
-    private String uploadDirCollection;    
+    private String uploadDirCollection;
+    @Value("${file.upload-dir-email}")
+    private String uploadDirEmail;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 将 /uploads/avatars/** 映射到本地文件系统路径
@@ -35,6 +37,8 @@ public class WebResourcesConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + uploadDirQuestion + "/");
         registry.addResourceHandler("/uploads/colfiles/**")
                 .addResourceLocations("file:" + uploadDirCollection + "/");
+        registry.addResourceHandler("/uploads/emails/**")
+                .addResourceLocations("file:" + uploadDirEmail + "/");
     }
     
 }

@@ -22,6 +22,8 @@ file:
   upload-dir-avatar: E:/1/thesis_test/village_test/uploads/avatars
   upload-dir-moment: E:/1/thesis_test/village_test/uploads/momentpics
   upload-dir-question: E:/1/thesis_test/village_test/uploads/aqfiles
+  upload-dir-collection: E:/1/thesis_test/village_test/uploads/colfiles
+  upload-dir-email: E:/1/thesis_test/village_test/uploads/emails
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.thesis.village.model

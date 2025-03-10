@@ -44,5 +44,9 @@ public interface UserMapper extends BaseMapper<User> {
     
     @Select("SELECT id,username FROM user")
     List<User> findAll();
+    
+    //获取所有有邮箱的用户
+    @Select("SELECT id,username,email FROM user WHERE email IS NOT NULL")
+    List<User> findAllEmail();    
 }
 
