@@ -1,8 +1,10 @@
 package com.thesis.village.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.thesis.village.model.ai.ChatRequest;
-import com.thesis.village.model.ai.RoleProfile;
+import com.thesis.village.aop.RequiresPermission;
+import com.thesis.village.model.ResponseResult;
+import com.thesis.village.model.ai.*;
+import com.thesis.village.service.ChatService;
 import io.github.lnyocly.ai4j.listener.SseListener;
 import io.github.lnyocly.ai4j.platform.openai.chat.entity.ChatCompletion;
 import io.github.lnyocly.ai4j.platform.openai.chat.entity.ChatCompletionResponse;
@@ -35,9 +37,11 @@ import java.util.stream.Collectors;
 public class AiController {
     @Autowired
     private AiService aiService;
-
+    @Autowired
+    private ChatService chatService;
     @Autowired
     private Map<String, RoleProfile> roleProfiles;
+    
 //    @GetMapping("/chat")
 //    public String chat(@RequestParam String question) {
 //        IChatService chatService = aiService.getChatService(PlatformType.MOONSHOT);
@@ -114,7 +118,6 @@ public class AiController {
 
     @GetMapping(value = "/chat-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<String>> streamChat() {
-        log.info("yhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
         return Flux.interval(Duration.ofMillis(500))
                 .map(seq -> ServerSentEvent.<String>builder()
                         .event("message") // 事件类型
@@ -154,4 +157,41 @@ public class AiController {
         writer.close();
         System.out.println(sseListener.getOutput());
     }
+    
+
+    @PostMapping("/sessions")
+    public ResponseResult<ChatSession> createSession(
+            @RequestBody SessionCreateDTO dto) {
+        return ResponseResult.success(chatService.createSession(dto));
+    }
+
+    // 获取用户会话列表
+    @GetMapping("/sessions")
+    public ResponseResult<List<ChatSession>> getSessions(
+            @RequestParam String userId) {
+        return ResponseResult.success(chatService.getUserSessions(userId));
+    }
+
+    // 获取会话消息
+    @GetMapping("/messages")
+    public ResponseResult<List<com.thesis.village.model.ai.ChatMessage>> getMessages(
+            @RequestParam String sessionId) {
+        return ResponseResult.success(chatService.getSessionMessages(sessionId));
+    }
+
+    // 保存消息
+    @PostMapping("/messages")
+    public ResponseResult<Void> saveMessages(
+            @RequestBody List<MessageBatchDTO> dto) {
+        chatService.saveMessages(dto);
+        return ResponseResult.success();
+    }
+    
+    @DeleteMapping("/sessions/{id}")
+    public ResponseResult<Void> deleteSession(@PathVariable String id) {
+        chatService.deleteSession(id);
+        return ResponseResult.success();
+        
+    }
+    
 }

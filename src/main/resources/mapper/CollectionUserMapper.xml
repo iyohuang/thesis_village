@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thesis.village.dao.CollectionUserMapper">
+
+    <insert id="insertBatch">
+        INSERT INTO collection_user
+        (collection_id, user_id, submitted, submit_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.collectionId}, #{item.userId}, #{item.submitted}, #{item.submitTime})
+        </foreach>
+    </insert>
+    
+    <update id="logicDeleteUsers">
+        UPDATE collection_user SET is_deleted = 1 WHERE collection_id = #{collectionId} AND 
+        user_id IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </update>
+
+    <insert id="batchUpsertUsers">
+        INSERT INTO collection_user
+        (collection_id, user_id, is_deleted)
+        VALUES
+        <foreach item="userId" collection="userIds" separator=",">
+            (#{collectionId}, #{userId}, 0)
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        is_deleted = VALUES(is_deleted),
+        submit_time = NULL
+    </insert>
+
+    <!-- 定义结果映射 -->
+    <resultMap id="ParticipantResultMap" type="com.thesis.village.model.filecollection.ParticipantDTO">
+        <id property="userId" column="userId"/>
+        <result property="submitted" column="submitted"/>
+        <result property="submitTime" column="submitTime"/>
+        <result
+                property="files"
+                column="files"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"
+        />
+    </resultMap>
+
+    <!-- 查询参与者列表 -->
+    <select id="selectParticipants" resultMap="ParticipantResultMap">
+        SELECT
+        u.id AS userId,
+        u.username AS username,
+        cu.submitted AS submitted,
+        cu.submit_time AS submitTime,
+        cu.files AS files 
+        FROM collection_user cu
+        JOIN user u ON cu.user_id = u.id
+        WHERE cu.collection_id = #{collectionId}
+        AND cu.is_deleted = 0
+        <if test="userId != null">
+            AND cu.user_id = #{userId}
+        </if>
+    </select>
+</mapper>

@@ -1,14 +1,19 @@
 package com.thesis.village.service.impl;
 
+import cn.hutool.core.io.resource.UrlResource;
+import com.thesis.village.service.CollectionService;
 import com.thesis.village.service.FileStorageService;
 import com.thesis.village.service.MomentService;
 import com.thesis.village.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,6 +37,9 @@ public class FileStorageServiceImpl implements FileStorageService {
     
     @Autowired
     private QuestionService questionService;
+    
+    @Autowired
+    private CollectionService collectionService;
     /**
      * 上传文件并返回访问路径
      */
@@ -64,7 +72,8 @@ public class FileStorageServiceImpl implements FileStorageService {
         List<String> imageUrls = new ArrayList<>();
         if (images != null && !images.isEmpty()) {
             for (MultipartFile image : images) {
-                String imageUrl = questionService.uploadFile(image);
+                String imageUrl = momentService.uploadImage(image);
+
                 imageUrl = "/api" + imageUrl;
                 imageUrls.add(imageUrl);
             }
@@ -77,11 +86,26 @@ public class FileStorageServiceImpl implements FileStorageService {
         List<String> imageUrls = new ArrayList<>();
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
-                String imageUrl = momentService.uploadImage(file);
+                String imageUrl = questionService.uploadFile(file);
                 imageUrl = "/api" + imageUrl;
                 imageUrls.add(imageUrl);
             }
         }
         return imageUrls;
+    }
+
+    @Override
+//    @Transactional
+    public List<String> storeColSrc(List<MultipartFile> files, Long taskId, Long userId) throws IOException {
+        List<String> colUrls = new ArrayList<>();
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                String colUrl = collectionService.uploadFile(file);
+                colUrl = "/api" + colUrl;
+                colUrls.add(colUrl);
+            }
+        }
+        collectionService.dosubmit(taskId, userId, colUrls);
+        return colUrls;
     }
 }

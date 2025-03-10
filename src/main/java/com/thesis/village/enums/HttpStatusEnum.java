@@ -59,6 +59,10 @@ public enum HttpStatusEnum {
      */
     BAD_METHOD(405, "不允许的http方法"),
     /**
+     *  没权限
+     */
+    NO_PERMISSION(406, "你没有资格"),
+    /**
      * 资源冲突，或者资源被锁
      */
     CONFLICT(409, "资源冲突，或者资源被锁"),

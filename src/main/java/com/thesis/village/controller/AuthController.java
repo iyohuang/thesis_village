@@ -2,7 +2,6 @@ package com.thesis.village.controller;
 import com.thesis.village.enums.HttpStatusEnum;
 import com.thesis.village.model.ResponseResult;
 import com.thesis.village.model.auth.User;
-import com.thesis.village.model.auth.AuthResponse;
 import com.thesis.village.model.auth.LoginRequest;
 import com.thesis.village.model.auth.RegisterRequest;
 import com.thesis.village.service.UserService;

@@ -1,13 +1,16 @@
 package com.thesis.village.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.thesis.village.model.auth.User;
 import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 /**
  * @author yh
  */
 @Mapper
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User> {
 
     // 根据用户名查询用户
     @Select("SELECT * FROM user WHERE username = #{username}")
@@ -38,5 +41,8 @@ public interface UserMapper {
 
     @Update("UPDATE user SET password = #{password}, updated_at = NOW() WHERE id = #{id}")
     int updateUserPassword(User user);
+    
+    @Select("SELECT id,username FROM user")
+    List<User> findAll();
 }
 

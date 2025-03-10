@@ -64,6 +64,7 @@ public class AqController {
         question.setAuthorAvatar(user.getAvatar());
         question.setAuthorUid(user.getId());
         question.setAuthorName(user.getUsername());
+        question.setAnswerCount(0L);
         questionService.addQuestion(question);
         if (!CollectionUtils.isEmpty(question.getTags())) {
             tagService.processQuestionTags(question.getQid(), question.getTags());

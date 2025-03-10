@@ -38,7 +38,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionTagRelMapper relMapper;
     @Autowired
-    private UserMapper userMapper; // 假设有用户服务客户端
+    private UserMapper userMapper;
     @Value("${file.upload-dir-question}")
     private String UPLOAD_DIR;
     public PageResult<QuestionDTO> getQuestions(QuestionQuery query) {
@@ -48,9 +48,10 @@ public class QuestionServiceImpl implements QuestionService {
         // 执行查询（此时SQL会自动添加LIMIT）
         List<QuestionDTO> questions = questionMapper.selectByCondition(query.getTagId());
 
+        log.info("questions,{}",questions);
+        
         // 转换为Page对象获取分页信息
         PageInfo<QuestionDTO> pageInfo = new PageInfo<>(questions);
-
         log.info("questions为,{}",questions);
         log.info("pageInfo为,{}",pageInfo);
 //        List<Long> qids = questions.stream()

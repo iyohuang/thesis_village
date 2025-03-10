@@ -130,4 +130,9 @@ public class UserServiceImpl implements UserService {
         operations.set(token,token,1, TimeUnit.HOURS);
         return token;
     }
+
+    @Override
+    public List<User> getUserList() {
+        return userMapper.findAll();
+    }
 }

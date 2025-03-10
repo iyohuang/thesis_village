@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.thesis.village.enums.HttpStatusEnum.BAD_REQUEST;
@@ -58,5 +59,12 @@ public class UserController {
         } else {
             return ResponseResult.fail("密码修改失败，请检查旧密码是否正确");
         }
+    }
+    
+    // 获得用户列表
+    @GetMapping("/list")
+    public ResponseResult<List<User>> getUserList() {
+        List<User> userList = userService.getUserList();
+        return ResponseResult.success(userList);
     }
 }

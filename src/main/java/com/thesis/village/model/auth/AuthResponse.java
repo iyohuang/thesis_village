@@ -20,5 +20,4 @@ public class AuthResponse {
         this.token = token;
     }
 
-    // Getter 和 Setter
 }

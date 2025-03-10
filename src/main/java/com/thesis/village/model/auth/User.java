@@ -19,7 +19,7 @@ public class User {
     private String avatar;  // 头像URL
     private Date createdAt;  // 创建时间
     private Date updatedAt;  // 更新时间
+    private String roleType; // 角色类型
 
-    // Getter 和 Setter 方法省略，使用 Lombok 可以自动生成
 }
 

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author yh
  */
@@ -39,6 +41,8 @@ public interface UserService{
 
     boolean updatePassword(PasswordUpdateRequest request);
 //    PageInfo<User> getUsers(int page, int size);
+    
+    List<User> getUserList();
     
 }
 
