@@ -16,4 +16,10 @@ public interface EmailService {
     List<User> getAllEmail();
 
     UserEmailConfig getAuthCode(String email, Long userId);
+
+    boolean isExistAuthCode(Long userId, String email);
+
+    boolean updateAuthCode(Long userId, String email, String authCode);
+
+    List<String> getAllAvailableEmails();
 }

@@ -5,6 +5,7 @@ import com.thesis.village.dao.UserMapper;
 import com.thesis.village.model.auth.User;
 import com.thesis.village.model.email.UserEmailConfig;
 import com.thesis.village.service.EmailService;
+import com.thesis.village.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -57,6 +59,34 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public UserEmailConfig getAuthCode(String email, Long userId) {
         return userEmailConfigMapper.selectByUserIdAndEmail(userId,email);
-    }    
+    }
+
+    /**
+     * 判断是否存在AuthCode
+     */
+    @Override
+    public boolean isExistAuthCode(Long userId,String email) {
+        return userEmailConfigMapper.selectByUserIdAndEmail(userId,email) != null;
+    }
+
+    /**
+     * 更新authcode
+     */
+    @Override
+    public boolean updateAuthCode(Long userId, String email, String authCode) {
+        return userEmailConfigMapper.updateAuthCode(userId,email,authCode) > 0;
+    }
+
+    /**
+     * 获取有授权码且没删除的
+     */
+    @Override
+    public List<String> getAllAvailableEmails() {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Long id = ((Number) map.get("id")).longValue();
+        return userEmailConfigMapper.selectAllAuthCode(id);
+    }
+
+
 
 }

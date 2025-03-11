@@ -1,5 +1,7 @@
 package com.thesis.village.model.auth;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -20,6 +22,9 @@ public class User {
     private Date createdAt;  // 创建时间
     private Date updatedAt;  // 更新时间
     private String roleType; // 角色类型
+    @TableLogic(value = "0", delval = "1")
+    @TableField("is_deleted")
+    private Integer isDeleted;
 
 }
 

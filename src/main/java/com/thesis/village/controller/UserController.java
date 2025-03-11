@@ -2,9 +2,12 @@ package com.thesis.village.controller;
 
 import com.thesis.village.model.ResponseResult;
 import com.thesis.village.model.auth.User;
+import com.thesis.village.model.email.UserEmailConfig;
 import com.thesis.village.model.user.PasswordUpdateRequest;
 import com.thesis.village.model.user.UserUpdateRequest;
+import com.thesis.village.service.EmailService;
 import com.thesis.village.service.UserService;
+import com.thesis.village.utils.AuthCodeCrypto;
 import com.thesis.village.utils.ThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ import static com.thesis.village.enums.HttpStatusEnum.BAD_REQUEST;
 public class UserController {
     @Autowired
     private UserService userService;  // 用户服务层
+    @Autowired
+    private EmailService emailService;
     @GetMapping("/userInfo")
     public ResponseResult<User> userInfo() {
         log.info("获取用户信息");
@@ -67,4 +72,16 @@ public class UserController {
         List<User> userList = userService.getUserList();
         return ResponseResult.success(userList);
     }
+    
+    @GetMapping("/isAushCodeExit/{userId}/{email}")
+    public ResponseResult<Boolean> isAuthCodeExit(@PathVariable Long userId,@PathVariable String email){
+        return ResponseResult.success(emailService.isExistAuthCode(userId,email));
+    }
+    
+    @PostMapping("/bindAuthCode")
+    public ResponseResult<Boolean> bindAuthCode(@RequestBody UserEmailConfig userEmailConfig) throws Exception {
+        return ResponseResult.success(emailService.updateAuthCode(userEmailConfig.getUserId(),userEmailConfig.getEmail(), AuthCodeCrypto.encrypt(userEmailConfig.getAuthCode())));
+    }
+    
+    
 }

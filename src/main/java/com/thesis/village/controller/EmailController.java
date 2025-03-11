@@ -160,4 +160,9 @@ public class EmailController {
             throw new BusinessException(1001,"文件上传失败");
         }
     }
+    
+    @GetMapping("/available")
+    public ResponseResult<List<String>> getAvailableEmails() {
+        return ResponseResult.success(emailService.getAllAvailableEmails());
+    }
 }

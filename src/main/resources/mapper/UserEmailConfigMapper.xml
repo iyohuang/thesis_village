@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thesis.village.dao.UserEmailConfigMapper">
+
+
+    <insert id="updateAuthCode">
+        INSERT INTO user_email_config (
+            user_id,
+            email,
+            auth_code
+        )
+        VALUES (#{userId},#{email},#{authCode})
+            ON DUPLICATE KEY UPDATE auth_code = VALUES(auth_code) , is_deleted = 0
+    </insert>
+</mapper>
