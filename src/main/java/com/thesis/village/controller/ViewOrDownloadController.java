@@ -22,9 +22,25 @@ public class ViewOrDownloadController {
     
     @Value("${file.upload-dir-collection}")
     private String uploadDirCollection;
+    @Value("${file.upload-dir-email}")
+    private String uploadEmail;
     
     @GetMapping("/colfiles/{fileName}")
     public void download(@PathVariable String fileName, HttpServletResponse response) throws IOException {
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+        String filePath = uploadDirCollection + File.separator + fileName;
+        if (!FileUtil.exist(filePath)) {
+            return;
+        }
+        byte[] bytes = FileUtil.readBytes(filePath);
+        ServletOutputStream outputStream = response.getOutputStream();
+        outputStream.write(bytes); // 数组是一个字节数组，也就是文件的字节流数组
+        outputStream.flush();
+        outputStream.close();
+    }
+
+    @GetMapping("/emails/{fileName}")
+    public void downloadEmail(@PathVariable String fileName, HttpServletResponse response) throws IOException {
         response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
         String filePath = uploadDirCollection + File.separator + fileName;
         if (!FileUtil.exist(filePath)) {
