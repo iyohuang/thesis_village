@@ -68,7 +68,7 @@ public class MomentServiceImpl implements MomentService {
 
     @Override
     public void deleteMomentById(Long momentId) {
-        momentMapper.deleteMomentById(momentId);
+        momentMapper.deleteById(momentId);
     }
 
     // 设置点赞信息，包括点赞数和当前用户是否点赞

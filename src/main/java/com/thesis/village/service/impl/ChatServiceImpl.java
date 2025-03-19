@@ -4,6 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.thesis.village.dao.AiRoleMapper;
 import com.thesis.village.dao.ChatMessageMapper;
 import com.thesis.village.dao.ChatSessionMapper;
+import com.thesis.village.model.BusinessException;
 import com.thesis.village.model.ai.*;
 import com.thesis.village.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,16 @@ public class ChatServiceImpl implements ChatService {
     public ChatSession createSession(SessionCreateDTO dto) {
         // 校验角色是否存在
         AiRole role = roleMapper.selectRoleById(dto.getRoleId());
-//        if (role == null) {
-//            throw new BusinessException("无效的角色ID");
-//        }
+        if (role == null) {
+            throw new BusinessException(1001,"无效的角色ID");
+        }
         // 生成会话ID（使用前端传递的nanoid）
         ChatSession session = new ChatSession();
-        session.setId(dto.getId()); // 需要引入hutool工具类
+        if(dto.getId() == null){ // 如果前端没有传递id，则生成一个
+            session.setId(IdUtil.nanoId());
+        }else{
+            session.setId(dto.getId());
+        }
         session.setUserId(dto.getUserId());
         session.setRoleId(dto.getRoleId());
         session.setTitle(dto.getTitle());

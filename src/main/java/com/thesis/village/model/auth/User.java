@@ -21,6 +21,7 @@ public class User {
     private String avatar;  // 头像URL
     private Date createdAt;  // 创建时间
     private Date updatedAt;  // 更新时间
+    @TableField("roletype")
     private String roleType; // 角色类型
     @TableLogic(value = "0", delval = "1")
     @TableField("is_deleted")

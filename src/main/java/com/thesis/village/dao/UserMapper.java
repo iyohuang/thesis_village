@@ -17,8 +17,8 @@ public interface UserMapper extends BaseMapper<User> {
     User findByUsername(@Param("username") String username);
 
     // 插入新用户
-    @Insert("INSERT INTO user (username, password, email, phone_number, created_at, updated_at) " +
-            "VALUES (#{username}, #{password}, #{email}, #{phoneNumber}, NOW(), NOW())")
+    @Insert("INSERT INTO user (username, password, email, avatar, phone_number, created_at, updated_at) " +
+            "VALUES (#{username}, #{password}, #{email}, #{avatar}, #{phoneNumber}, NOW(), NOW())")
     void insertUser(User user);
 
     // 判断用户名是否存在

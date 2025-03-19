@@ -10,6 +10,7 @@ import com.thesis.village.dao.CollectionMapper;
 import com.thesis.village.dao.CollectionUserMapper;
 import com.thesis.village.model.filecollection.*;
 import com.thesis.village.service.CollectionService;
+import com.thesis.village.utils.ThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -54,12 +56,14 @@ public class CollectionServiceImpl implements CollectionService {
 //        if (validUserIds.size() != dto.getUserIds().size()) {
 //            throw new BusinessException("存在无效用户");
 //        }
-
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Long id = ((Number) map.get("id")).longValue();
         // 插入主记录
         Collections collection = new Collections();
         collection.setName(dto.getName());
         collection.setDeadline(dto.getDeadline());
         collection.setCreateTime(LocalDateTime.now());
+        collection.setCreatUserId(id);
         collectionMapper.insert(collection);
 
         // 批量插入关联关系

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thesis.village.dao.UserPermissionMapper">
+
+    <select id="selectUsersWithPermissions" resultType="com.thesis.village.model.auth.UserPermissionDTO">
+        SELECT
+        u.id,
+        u.username,
+        u.roleType AS role,
+        (
+        SELECT GROUP_CONCAT(permission_code)
+        FROM user_permission
+        WHERE user_id = u.id
+        AND permission_type = 'manage_others'
+        AND is_deleted = 0 
+        ) AS manageOthers,
+        (
+        SELECT GROUP_CONCAT(permission_code)
+        FROM user_permission
+        WHERE user_id = u.id
+        AND permission_type = 'manage_self'
+        AND is_deleted = 0 
+        ) AS manageSelf
+        FROM user u
+        WHERE u.is_deleted = 0 
+        <if test="role != null and role != ''">
+            AND u.roleType = #{role}
+        </if>
+        <!-- 用户名模糊搜索 -->
+        <if test="username != null and username != ''">
+            AND u.username LIKE CONCAT('%', #{username}, '%')
+        </if>
+    </select>
+    
+    
+</mapper>    

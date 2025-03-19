@@ -58,7 +58,7 @@ public class EmailController {
     
     @GetMapping("/history")
     public ResponseResult<List<EmailHistory>> getHistory() {
-        return ResponseResult.success(emailHistoryMapper.selectList(null));
+        return ResponseResult.success(emailService.getHistoryEmail());
     }
     
     @GetMapping("/test")
@@ -145,6 +145,8 @@ public class EmailController {
             ObjectMapper toMapper = new ObjectMapper();
             String jsonto = toMapper.writeValueAsString(to);
             
+            
+            
             Transport.send(message);
             EmailHistory emailHistory = new EmailHistory().
                     setSenderEmail(from).
@@ -153,7 +155,8 @@ public class EmailController {
                     setSubject(subject).
                     setContent(content).
                     setCreatedAt(LocalDateTime.now()).
-                    setFiles(jsonFiles);
+                    setFiles(jsonFiles).
+                    setSendUser(id);
             emailHistoryMapper.insert(emailHistory);
             return ResponseResult.success("邮件发送成功");
         } catch (IOException e) {

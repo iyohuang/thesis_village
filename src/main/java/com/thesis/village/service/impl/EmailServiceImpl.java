@@ -1,8 +1,11 @@
 package com.thesis.village.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.thesis.village.dao.EmailHistoryMapper;
 import com.thesis.village.dao.UserEmailConfigMapper;
 import com.thesis.village.dao.UserMapper;
 import com.thesis.village.model.auth.User;
+import com.thesis.village.model.email.EmailHistory;
 import com.thesis.village.model.email.UserEmailConfig;
 import com.thesis.village.service.EmailService;
 import com.thesis.village.utils.ThreadLocalUtil;
@@ -34,6 +37,9 @@ public class EmailServiceImpl implements EmailService {
     
     @Autowired
     private UserEmailConfigMapper userEmailConfigMapper;
+    
+    @Autowired
+    private EmailHistoryMapper emailHistoryMapper;
     
     @Override
     public String uploadFile(MultipartFile file) {
@@ -87,6 +93,12 @@ public class EmailServiceImpl implements EmailService {
         return userEmailConfigMapper.selectAllAuthCode(id);
     }
 
-
-
+    @Override
+    public List<EmailHistory> getHistoryEmail() {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Long id = ((Number) map.get("id")).longValue();
+        QueryWrapper<EmailHistory> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(EmailHistory::getSendUser, id);
+        return emailHistoryMapper.selectList(queryWrapper);
+    }
 }

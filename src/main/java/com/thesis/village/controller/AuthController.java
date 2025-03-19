@@ -1,18 +1,19 @@
 package com.thesis.village.controller;
+import com.github.pagehelper.PageInfo;
+import com.thesis.village.dao.UserPermissionMapper;
 import com.thesis.village.enums.HttpStatusEnum;
 import com.thesis.village.model.ResponseResult;
-import com.thesis.village.model.auth.User;
-import com.thesis.village.model.auth.LoginRequest;
-import com.thesis.village.model.auth.RegisterRequest;
+import com.thesis.village.model.auth.*;
 import com.thesis.village.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,7 +30,7 @@ public class AuthController {
         // 校验用户名和密码
         User user = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
         if (user == null) {
-            return ResponseResult.fail(HttpStatusEnum.UNAUTHORIZED);
+            return ResponseResult.fail(401,"用户名或密码错误");
         }
 
         // 生成 JWT
@@ -63,5 +64,30 @@ public class AuthController {
         user.setAvatar("/api/uploads/avatars/default.jpg");
         userService.registerUser(user);
         return ResponseResult.success("User registered successfully");
+    }
+    
+    @GetMapping("/list")
+    public ResponseResult<PageInfo<UserPermissionVO>> test(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String role) {
+        UserPermissionQuery q = new UserPermissionQuery()
+                .setPage(page).setPageSize(size);
+        if(username!=null) q.setUsername(username);
+        if(role!=null) q.setRole(role);
+        return ResponseResult.success(userService.getUserPermissions(q));
+    }
+    
+    @PutMapping("/{userId}/permissions")
+    public ResponseResult<Void> updatePermissions(@PathVariable("userId") Long userId, @RequestBody UserPermissionVO.Permissions permissions) {
+        userService.updatePermissions(userId, permissions);
+        return ResponseResult.success("Permissions updated successfully");
+    }
+
+    @PutMapping("/{userId}/role")
+    public ResponseResult<Void> updateRole(@PathVariable("userId") Long userId, @RequestBody UserPermissionDTO dto) {
+        Boolean b = userService.updateUserRole(userId, dto);
+        return b?ResponseResult.success("Role updated successfully"):ResponseResult.fail("Role update failed");
     }
 }

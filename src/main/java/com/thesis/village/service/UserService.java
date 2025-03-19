@@ -1,13 +1,13 @@
 package com.thesis.village.service;
 
-import com.thesis.village.dao.UserMapper;
+import com.github.pagehelper.PageInfo;
 import com.thesis.village.model.auth.User;
+import com.thesis.village.model.auth.UserPermissionDTO;
+import com.thesis.village.model.auth.UserPermissionQuery;
+import com.thesis.village.model.auth.UserPermissionVO;
 import com.thesis.village.model.user.PasswordUpdateRequest;
 import com.thesis.village.model.user.UserUpdateRequest;
-import com.thesis.village.utils.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -43,6 +43,12 @@ public interface UserService{
 //    PageInfo<User> getUsers(int page, int size);
     
     List<User> getUserList();
-    
+
+    PageInfo<UserPermissionVO> getUserPermissions(UserPermissionQuery query);
+
+    @Transactional
+    void updatePermissions(Long userId, UserPermissionVO.Permissions permissions);
+
+    Boolean updateUserRole(Long userId, UserPermissionDTO dto);
 }
 

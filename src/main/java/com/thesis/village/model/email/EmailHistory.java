@@ -20,7 +20,9 @@ public class EmailHistory {
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-
+    
+    @TableField("send_user")
+    private Long sendUser;
     /**
      * 发件人邮箱
      */

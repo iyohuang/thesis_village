@@ -1,5 +1,6 @@
 package com.thesis.village.controller;
 
+import com.thesis.village.aop.RequiresPermission;
 import com.thesis.village.model.ResponseResult;
 import com.thesis.village.model.auth.User;
 import com.thesis.village.model.social.Moment;
@@ -47,9 +48,15 @@ public class MomentController {
         return ResponseResult.success(list);
     }
     
-    //删除
     @DeleteMapping("/delete/{id}")
     public ResponseResult<?> deleteMoment(@PathVariable Long id) {
+        momentService.deleteMomentById(id);
+        return ResponseResult.success("删除成功");
+    }
+
+    @RequiresPermission(value = "moments:delete",operationType = "other")
+    @DeleteMapping("/deleteother/{id}")
+    public ResponseResult<?> deleteOtherMoment(@PathVariable Long id) {
         momentService.deleteMomentById(id);
         return ResponseResult.success("删除成功");
     }
@@ -59,5 +66,6 @@ public class MomentController {
         boolean success = momentService.toggleLike(momentid,userId);
         return success ? ResponseResult.success("点赞成功") : ResponseResult.fail("点赞失败");
     }
+    
     
 }

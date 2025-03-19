@@ -56,7 +56,7 @@ public class PermissionAspect {
         }else{
             if(roleType.equals("superadmin")) return joinPoint.proceed();
             if(roleType.equals("admin")) {
-                if(userPermissionMapper.selectCountByUserIdAndPermissionCode(currentUser.getId(),requiresPermission.value())>0){
+                if(userPermissionMapper.selectCountByUserIdAndPermissionCode(currentUser.getId(),requiresPermission.value())<0){
                     return joinPoint.proceed();
                 }
                 throw new BusinessException(HttpStatusEnum.NO_PERMISSION);
